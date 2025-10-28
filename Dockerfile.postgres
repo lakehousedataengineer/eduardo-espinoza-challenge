@@ -1,0 +1,29 @@
+# ==================================================
+# 🐍 FastAPI + PostgreSQL (Railway Ready)
+# ==================================================
+FROM python:3.11-slim AS base
+
+# Configuración del entorno
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1
+
+WORKDIR /app
+
+# Librerías necesarias para psycopg2 y build
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Instalar dependencias
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copiar aplicación
+COPY . .
+
+# Puerto estándar FastAPI
+EXPOSE 8000
+
+# Comando principal
+CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000"]

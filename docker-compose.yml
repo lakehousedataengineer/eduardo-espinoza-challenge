@@ -1,0 +1,43 @@
+version: "3.9"
+
+services:
+  # 🐘 PostgreSQL Database
+  postgres:
+    image: postgres:17
+    container_name: postgres_challenge
+    restart: always
+    environment:
+      POSTGRES_USER: kalito
+      POSTGRES_PASSWORD: AllMyLoving2025$$
+      POSTGRES_DB: landing
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+      - ./seed_data.sql:/docker-entrypoint-initdb.d/seed_data.sql
+
+  # ⚡ FastAPI Application
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fastapi_challenge
+    restart: always
+    depends_on:
+      - postgres
+    ports:
+      - "8000:8000"
+    environment:
+      PG_USER: kalito
+      PG_PASSWORD: AllMyLoving2025$$
+      PG_HOST: postgres
+      PG_PORT: 5432
+      PG_DB: landing
+      LOG_LEVEL: info
+    volumes:
+      - .:/app
+    command: >
+      sh -c "uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload"
+
+volumes:
+  pg_data:
