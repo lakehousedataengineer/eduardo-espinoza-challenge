@@ -225,6 +225,33 @@ src/tests/test_analytics_above_mean.py ..            [100%]
 ```
 
 
+
+## 🚀 Ejecución local del servidor FastAPI
+
+Si deseas ejecutar la aplicación **localmente sin Docker**, sigue los pasos:
+
+### 1️⃣ Crear entorno virtual e instalar dependencias
+```bash
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
+
+### 2️⃣ Configurar variables de entorno
+Copia el archivo `.env.example` a `.env` y actualiza las credenciales de base de datos.
+
+### 3️⃣ Iniciar el servidor FastAPI
+```bash
+uvicorn src.main:app --reload
+```
+
+### 4️⃣ Acceder a la documentación
+Abre tu navegador en:
+```
+http://localhost:8000/docs
+```
+
+
 ## 🐳 Despliegue con Docker (Local)
 
 A continuación se detallan los comandos necesarios para compilar, ejecutar, inspeccionar y limpiar el entorno Docker del proyecto **eduardo-espinoza-challenge**.
@@ -280,6 +307,112 @@ Una vez iniciado el contenedor, abre en tu navegador:
 ```
 http://localhost:8000/docs
 ```
+### 7️⃣ Detener todos los contenedores en ejecución
+```bash
+docker stop $(docker ps -aq)
+```
+
+
+### 8️⃣ Limpiar completamente el entorno Docker (sin errores si está vacío)
+```bash
+# Elimina contenedores detenidos
+docker container prune -f
+
+# Elimina imágenes no usadas
+docker image prune -af
+
+# Elimina volúmenes no usados
+docker volume prune -f
+
+# Limpieza total (contenedores, imágenes, redes y volúmenes)
+docker system prune -af --volumes
+```
+
+
+### 9️⃣ Limpiar todo y reconstruir desde cero
+```bash
+docker system prune -af && docker build -t eduardo-espinoza-challenge . && docker run -d -p 8000:8000 --env-file .env eduardo-espinoza-challenge
+```
+
+### 🔎 Verificar estado del servicio
+```bash
+curl http://localhost:8000/docs
+```
+
+
+
+---
+
+## 🧹 Limpieza total de Docker
+
+En caso necesites **borrar absolutamente todas las imágenes, contenedores, volúmenes y redes** (por ejemplo, para reiniciar desde cero tu entorno Docker), sigue los pasos a continuación.
+
+> ⚠️ **Advertencia:** Esto eliminará *todo* lo que tengas en Docker, incluyendo contenedores, imágenes y bases de datos.  
+> Úsalo solo si deseas hacer una limpieza total del sistema Docker.
+
+### 1️⃣ Detener todos los contenedores
+```bash
+docker stop $(docker ps -aq) 2>/dev/null
+```
+
+### 2️⃣ Eliminar todos los contenedores
+```bash
+docker rm -f $(docker ps -aq) 2>/dev/null
+```
+
+### 3️⃣ Eliminar todas las imágenes
+```bash
+docker rmi -f $(docker images -q) 2>/dev/null
+```
+
+### 4️⃣ Eliminar todos los volúmenes (incluye bases de datos)
+```bash
+docker volume rm $(docker volume ls -q) 2>/dev/null
+```
+
+### 5️⃣ Eliminar todas las redes no usadas
+```bash
+docker network prune -f
+```
+
+### 6️⃣ Limpieza general (todo lo anterior junto)
+Puedes hacer todo con un solo comando:
+```bash
+docker system prune -af --volumes
+```
+
+### 7️⃣ Verificar que está limpio
+```bash
+docker ps -a
+docker images
+docker volume ls
+```
+
+Si todos los comandos devuelven vacío, tu sistema Docker quedó completamente limpio ✅
+
+
+
+---
+
+## 🧱 Construir y Reiniciar con Docker Compose
+
+Si utilizas **Docker Compose** para desplegar tu entorno (FastAPI + PostgreSQL), puedes usar los siguientes comandos:
+
+### 🏗️ Construir todo nuevamente
+Compila y lanza los contenedores desde cero:
+```bash
+docker compose up -d --build
+```
+
+### 🔁 Reiniciar todos los servicios
+Detiene y vuelve a levantar todo el entorno sin reconstruir imágenes:
+```bash
+docker compose down
+docker compose up -d
+```
+
+Estos comandos garantizan que tanto **FastAPI** como **PostgreSQL** se actualicen correctamente y permanezcan sincronizados.
+
 
 ## ☁️ Despliegue en Render.com
 

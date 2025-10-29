@@ -8,7 +8,7 @@ services:
     restart: always
     environment:
       POSTGRES_USER: kalito
-      POSTGRES_PASSWORD: AllMyLoving2025$$
+      POSTGRES_PASSWORD: kalito123
       POSTGRES_DB: landing
     ports:
       - "5432:5432"
@@ -29,7 +29,7 @@ services:
       - "8000:8000"
     environment:
       PG_USER: kalito
-      PG_PASSWORD: AllMyLoving2025$$
+      PG_PASSWORD: kalito123
       PG_HOST: postgres
       PG_PORT: 5432
       PG_DB: landing

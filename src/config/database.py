@@ -10,7 +10,7 @@ load_dotenv()
 
 # 🔹 Variables de conexión PostgreSQL
 PG_USER = os.getenv("PG_USER", "kalito")
-PG_PASSWORD = os.getenv("PG_PASSWORD", "AllMyLoving2025$$")
+PG_PASSWORD = os.getenv("PG_PASSWORD", "kalito123")
 PG_HOST = os.getenv("PG_HOST", "localhost")
 PG_PORT = os.getenv("PG_PORT", "5432")
 PG_DB = os.getenv("PG_DB", "landing")
